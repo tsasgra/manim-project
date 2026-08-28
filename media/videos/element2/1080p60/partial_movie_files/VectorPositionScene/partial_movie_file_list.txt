@@ -1,0 +1,5 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/Users/ASUS/manimations/media/videos/element2/1080p60/partial_movie_files/VectorPositionScene/3373382780_4039060768_631829896.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/element2/1080p60/partial_movie_files/VectorPositionScene/3373382780_1191356503_4043974176.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/element2/1080p60/partial_movie_files/VectorPositionScene/4234509111_4039060768_2986972582.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/element2/1080p60/partial_movie_files/VectorPositionScene/4234509111_1670870752_2282841037.mp4'
