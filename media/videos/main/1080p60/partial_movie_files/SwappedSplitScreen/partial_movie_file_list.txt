@@ -1,0 +1,4 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/Users/ASUS/manimations/media/videos/main/1080p60/partial_movie_files/SwappedSplitScreen/3373382780_2819533546_3492254753.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/main/1080p60/partial_movie_files/SwappedSplitScreen/4234509111_2634819181_3296868098.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/main/1080p60/partial_movie_files/SwappedSplitScreen/4234509111_3144733831_229507678.mp4'

@@ -1,0 +1,8 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/Users/ASUS/manimations/media/videos/element2/1080p60/partial_movie_files/Position1D/3373382780_2853943544_223132457.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/element2/1080p60/partial_movie_files/Position1D/4234509111_196140046_3217357927.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/element2/1080p60/partial_movie_files/Position1D/4234509111_264153947_1043422121.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/element2/1080p60/partial_movie_files/Position1D/4234509111_847192958_3096577696.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/element2/1080p60/partial_movie_files/Position1D/4234509111_1004017264_557816539.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/element2/1080p60/partial_movie_files/Position1D/4234509111_2019270235_1305611535.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/element2/1080p60/partial_movie_files/Position1D/4234509111_2645707024_4054613920.mp4'

@@ -1,0 +1,7 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/ViTriVector/3373382780_1756952182_223132457.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/ViTriVector/4234509111_3880968470_1823808501.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/ViTriVector/4234509111_3369561685_3146996147.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/ViTriVector/4234509111_1482957776_265951017.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/ViTriVector/4234509111_3325694080_4025134820.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/ViTriVector/4234509111_4176908490_378920298.mp4'

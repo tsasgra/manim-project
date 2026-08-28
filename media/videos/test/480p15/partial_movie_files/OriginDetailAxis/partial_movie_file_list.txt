@@ -1,0 +1,11 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/Users/ASUS/manimations/media/videos/test/480p15/partial_movie_files/OriginDetailAxis/2118183852_3252061351_223132457.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/480p15/partial_movie_files/OriginDetailAxis/366519484_1030018362_2432245599.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/480p15/partial_movie_files/OriginDetailAxis/366519484_569360777_1020829064.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/480p15/partial_movie_files/OriginDetailAxis/366519484_1020821521_1614472180.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/480p15/partial_movie_files/OriginDetailAxis/366519484_2645707024_3695037775.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/480p15/partial_movie_files/OriginDetailAxis/366519484_1543431996_3892308623.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/480p15/partial_movie_files/OriginDetailAxis/366519484_1079125659_3079672092.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/480p15/partial_movie_files/OriginDetailAxis/366519484_2645707024_3805604691.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/480p15/partial_movie_files/OriginDetailAxis/366519484_736228855_822756849.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/480p15/partial_movie_files/OriginDetailAxis/366519484_4176908490_3696625581.mp4'

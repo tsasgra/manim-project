@@ -1,0 +1,7 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/OriginDetailAxis/3373382780_3252061351_223132457.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/OriginDetailAxis/4234509111_1868409197_2432245599.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/OriginDetailAxis/4234509111_569360777_1540210580.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/OriginDetailAxis/4234509111_847192958_3430105831.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/OriginDetailAxis/4234509111_1020821521_3214003471.mp4'
+file 'file:C:/Users/ASUS/manimations/media/videos/test/1080p60/partial_movie_files/OriginDetailAxis/4234509111_4176908490_1967779002.mp4'
