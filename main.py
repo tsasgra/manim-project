@@ -5,7 +5,7 @@ import random
 # Cấu hình tỷ lệ màn hình 9:16 (Video dọc)
 config.pixel_width = 1080
 config.pixel_height = 1920
-config.frame_width = 9.0   
+config.frame_width = 10.0   # Mở rộng chiều rộng khung hình logic để chứa vừa trục số dài
 config.frame_height = 16.0 
 
 class CombinedPhysicsScene(Scene):
@@ -61,12 +61,12 @@ class CombinedPhysicsScene(Scene):
             dots.add(dot)
 
         # 3. GIAO DIỆN CHIA MÀN HÌNH (Y = 0)
-        solid_line = Line(LEFT * 4.5, RIGHT * 4.5, color=WHITE, stroke_width=2)
+        solid_line = Line(LEFT * 5.0, RIGHT * 5.0, color=WHITE, stroke_width=2)
 
         center_text = Text("Chuyển động thẳng", font="Times New Roman", font_size=42, color=WHITE)
         center_text.move_to(ORIGIN) 
-        left_line = Line(LEFT * 4.5, center_text.get_left() + LEFT * 0.2, color=WHITE, stroke_width=2)
-        right_line = Line(center_text.get_right() + RIGHT * 0.2, RIGHT * 4.5, color=WHITE, stroke_width=2)
+        left_line = Line(LEFT * 5.0, center_text.get_left() + LEFT * 0.2, color=WHITE, stroke_width=2)
+        right_line = Line(center_text.get_right() + RIGHT * 0.2, RIGHT * 5.0, color=WHITE, stroke_width=2)
         divider_group = VGroup(left_line, center_text, right_line)
 
         # ==========================================
@@ -232,7 +232,6 @@ class CombinedPhysicsScene(Scene):
         # ==========================================
         # PHẦN 5: HIỆU ỨNG CHUYỂN CẢNH "Vị trí (Vector)"
         # ==========================================
-        # 1. Tải và hiển thị hình ảnh (Chữ trắng hoàn toàn theo ảnh mẫu)
         text_vi_tri = Text("Vị trí", font="Times New Roman", font_size=65, color=WHITE)
         text_vector = Text("(Vector)", font="Times New Roman", font_size=55, color=WHITE).next_to(text_vi_tri, DOWN, buff=0.3)
         
@@ -241,21 +240,16 @@ class CombinedPhysicsScene(Scene):
         self.play(FadeIn(transition_group, scale=0.8), run_time=1.0)
         self.wait(0.5)
 
-        # 2. Di chuyển nội dung lên phía trên trong 3 giây
         self.play(transition_group.animate.shift(UP * 3), run_time=1.7)
 
-        # 3. Tạo các Text "Độ lớn" và "Hướng"
         text_do_lon = Text("Độ lớn", font="Times New Roman", font_size=55, color=WHITE)
         text_huong = Text("Hướng", font="Times New Roman", font_size=55, color=WHITE)
 
-        # Định vị trí cho hai text ở dưới, tủa ra hai bên
         text_do_lon.next_to(transition_group, DOWN, buff=4).shift(LEFT * 2)
         text_huong.next_to(transition_group, DOWN, buff=4).shift(RIGHT * 2)
 
-        # 4. Vẽ mũi tên với màu cam/đỏ nhạt giống ảnh gốc
-        arrow_color = "#FF7F50" # Màu Coral tương đồng với ảnh
+        arrow_color = "#FF7F50" 
         
-        # Lấy tọa độ mép dưới của chữ (Vector) để làm điểm bắt đầu mũi tên
         start_point_left = text_vector.get_bottom() + LEFT * 0.2 + DOWN * 0.2
         start_point_right = text_vector.get_bottom() + RIGHT * 0.2 + DOWN * 0.2
 
@@ -275,7 +269,6 @@ class CombinedPhysicsScene(Scene):
             buff=0.3
         )
 
-        # 5. Hiệu ứng hiển thị mũi tên và chữ
         self.play(
             Create(arrow_left),
             Create(arrow_right),
@@ -289,6 +282,113 @@ class CombinedPhysicsScene(Scene):
 
         self.wait(2.0)
         
-        # 6. FadeOut tất cả cùng lúc
         all_elements = VGroup(transition_group, arrow_left, arrow_right, text_do_lon, text_huong)
         self.play(FadeOut(all_elements, scale=1.5), run_time=1.0)
+        self.wait(0.5)
+
+        # ==========================================
+        # PHẦN 6: TRỤC TỌA ĐỘ VÀ VECTOR VỊ TRÍ (TỪ CODE 2)
+        # ==========================================
+        # TRỤC TỌA ĐỘ TRÊN (TOP)
+        axis_top = NumberLine(
+            x_range=[0, 8.7, 1],
+            length=8.5,
+            color=WHITE,
+            numbers_to_exclude=[0]
+        ).shift(UP * 4)
+        axis_top.add_numbers()
+        
+        x_label_top = MathTex(r"x \text{ (m)}").next_to(axis_top, UP, aligned_edge=RIGHT).shift(LEFT * 0.2)
+        
+        dot_O_top = Dot(axis_top.n2p(0), color=BLUE)
+        label_O_top = MathTex("O").next_to(dot_O_top, DOWN)
+        
+        vec_green_start = axis_top.n2p(0)
+        vec_green_end = axis_top.n2p(5)
+        vec_green = Arrow(
+            start=vec_green_start, 
+            end=vec_green_end, 
+            color=GREEN_C, 
+            buff=0, 
+            stroke_width=6, 
+            max_tip_length_to_length_ratio=0.1
+        )
+        
+        dot_5_top = Dot(axis_top.n2p(5), color=BLUE)
+        
+        point_5_top = axis_top.n2p(5)
+        arrow_down_top = Arrow(
+            start=point_5_top + UP * 1.0, 
+            end=point_5_top + UP * 0.2, 
+            color=YELLOW, 
+            buff=0
+        )
+        
+        text_green = MathTex(r"x = +5 \text{ m}", color=GREEN_C).next_to(arrow_down_top, UP)
+
+
+        # TRỤC TỌA ĐỘ DƯỚI (BOTTOM)
+        axis_bottom = NumberLine(
+            x_range=[-8.7, 0, 1],
+            length=8.5,
+            color=WHITE,
+            numbers_to_exclude=[0]
+        ).shift(DOWN * 4)
+        axis_bottom.add_numbers()
+
+        x_label_bottom = MathTex(r"x \text{ (m)}").next_to(axis_bottom, UP, aligned_edge=LEFT).shift(RIGHT * 0.2)
+
+        dot_O_bottom = Dot(axis_bottom.n2p(0), color=BLUE)
+        label_O_bottom = MathTex("O").next_to(dot_O_bottom, DOWN)
+
+        vec_red_start = axis_bottom.n2p(0)
+        vec_red_end = axis_bottom.n2p(-5)
+        vec_red = Arrow(
+            start=vec_red_start, 
+            end=vec_red_end, 
+            color=RED_C, 
+            buff=0, 
+            stroke_width=6, 
+            max_tip_length_to_length_ratio=0.1
+        )
+
+        dot_minus_5_bottom = Dot(axis_bottom.n2p(-5), color=BLUE)
+
+        point_minus_5_bottom = axis_bottom.n2p(-5)
+        arrow_down_bottom = Arrow(
+            start=point_minus_5_bottom + UP * 1.0, 
+            end=point_minus_5_bottom + UP * 0.2, 
+            color=YELLOW, 
+            buff=0
+        )
+        
+        text_red = MathTex(r"x = -5 \text{ m}", color=RED_C).next_to(arrow_down_bottom, UP)
+
+
+        # KỊCH BẢN CHẠY ANIMATION CHO PHẦN 6
+        self.play(
+            Create(axis_top), FadeIn(x_label_top), FadeIn(dot_O_top), FadeIn(label_O_top),
+            Create(axis_bottom), FadeIn(x_label_bottom), FadeIn(dot_O_bottom), FadeIn(label_O_bottom),
+            run_time=2
+        )
+        self.wait(0.5)
+
+        self.play(
+            GrowArrow(vec_green),
+            GrowArrow(vec_red),
+            run_time=2
+        )
+        
+        # Gắn ngay các chấm xanh ở đầu vector
+        self.add(dot_5_top, dot_minus_5_bottom)
+
+        self.wait(0.7)
+
+        # Mũi tên vàng và text xuất hiện
+        self.play(
+            GrowArrow(arrow_down_top), FadeIn(text_green),
+            GrowArrow(arrow_down_bottom), FadeIn(text_red),
+            run_time=1.5
+        )
+        
+        self.wait(2)
