@@ -140,6 +140,7 @@ class CombinedPhysicsScene(Scene):
         self.wait(1.5)
         self.play(FadeOut(ending_text, scale=1.2), run_time=1.0)
         self.wait(0.5)
+
         # ==========================================
         # PHẦN 4: VẼ TRỤC TOẠ ĐỘ Ox
         # ==========================================
@@ -248,6 +249,7 @@ class CombinedPhysicsScene(Scene):
             run_time=1.2
         )
         self.wait(0.3)
+
         # ==========================================
         # PHẦN 5: HIỆU ỨNG CHUYỂN CẢNH "Vị trí (Vector)"
         # ==========================================
@@ -306,7 +308,7 @@ class CombinedPhysicsScene(Scene):
         self.wait(0.5)
 
         # ==========================================
-        # PHẦN 6: TRỤC TỌA ĐỘ VÀ VECTOR VỊ TRÍ (TỪ CODE 2)
+        # PHẦN 6: TRỤC TỌA ĐỘ VÀ VECTOR VỊ TRÍ (ĐÃ CẬP NHẬT TỪ CODE 2)
         # ==========================================
         # TRỤC TỌA ĐỘ TRÊN (TOP)
         axis_top = NumberLine(
@@ -345,14 +347,13 @@ class CombinedPhysicsScene(Scene):
         
         text_green = MathTex(r"x = +5 \text{ m}", color=GREEN_C).next_to(arrow_down_top, UP)
 
-
         # TRỤC TỌA ĐỘ DƯỚI (BOTTOM)
         axis_bottom = NumberLine(
             x_range=[-8.7, 0, 1],
             length=8.5,
             color=WHITE,
             numbers_to_exclude=[0]
-        ).shift(DOWN * 4)
+        ).shift(DOWN * 3.2)
         axis_bottom.add_numbers()
 
         x_label_bottom = MathTex(r"x \text{ (m)}").next_to(axis_bottom, UP, aligned_edge=LEFT).shift(RIGHT * 0.2)
@@ -374,17 +375,17 @@ class CombinedPhysicsScene(Scene):
         dot_minus_5_bottom = Dot(axis_bottom.n2p(-5), color=BLUE)
 
         point_minus_5_bottom = axis_bottom.n2p(-5)
-        arrow_down_bottom = Arrow(
-            start=point_minus_5_bottom + UP * 1.0, 
-            end=point_minus_5_bottom + UP * 0.2, 
+        
+        arrow_up_bottom = Arrow(
+            start=point_minus_5_bottom + DOWN * 1.5, 
+            end=point_minus_5_bottom + DOWN * 0.5, 
             color=YELLOW, 
             buff=0
         )
         
-        text_red = MathTex(r"x = -5 \text{ m}", color=RED_C).next_to(arrow_down_bottom, UP)
+        text_red = MathTex(r"x = -5 \text{ m}", color=RED_C).next_to(arrow_up_bottom, DOWN)
 
-
-        # KỊCH BẢN CHẠY ANIMATION CHO PHẦN 6
+        # KỊCH BẢN CHẠY ANIMATION
         self.play(
             Create(axis_top), FadeIn(x_label_top), FadeIn(dot_O_top), FadeIn(label_O_top),
             Create(axis_bottom), FadeIn(x_label_bottom), FadeIn(dot_O_bottom), FadeIn(label_O_bottom),
@@ -398,7 +399,6 @@ class CombinedPhysicsScene(Scene):
             run_time=2
         )
         
-        # Gắn ngay các chấm xanh ở đầu vector
         self.add(dot_5_top, dot_minus_5_bottom)
 
         self.wait(0.7)
@@ -406,8 +406,89 @@ class CombinedPhysicsScene(Scene):
         # Mũi tên vàng và text xuất hiện
         self.play(
             GrowArrow(arrow_down_top), FadeIn(text_green),
-            GrowArrow(arrow_down_bottom), FadeIn(text_red),
+            GrowArrow(arrow_up_bottom), FadeIn(text_red),
             run_time=1.5
         )
         
+        self.wait(1)
+
+        # THÊM PHẦN BIỂU THỊ ĐỘ LỚN |x| = 5 m
+        brace_top = BraceBetweenPoints(axis_top.n2p(0), axis_top.n2p(5), direction=DOWN).shift(DOWN * 0.8)
+        brace_text_top = MathTex(r"|x| = 5 \text{ m}").next_to(brace_top, DOWN)
+
+        brace_bottom = BraceBetweenPoints(axis_bottom.n2p(-5), axis_bottom.n2p(0), direction=UP).shift(UP * 0.2)
+        brace_text_bottom = MathTex(r"|x| = 5 \text{ m}").next_to(brace_bottom, UP)
+
+        self.play(
+            GrowFromCenter(brace_top), FadeIn(brace_text_top),
+            GrowFromCenter(brace_bottom), FadeIn(brace_text_bottom),
+            run_time=1.5
+        )
+
+        self.wait(1.5)
+
+        # XÓA NGOẶC VÀ THÊM TEXT (ĐIỀU CHỈNH VỊ TRÍ)
+        text_pos_dir = Text("Chiều dương (+)", font="Times New Roman", font_size=36, color=GREEN_C).move_to(axis_top.n2p(2.5) + DOWN * 1.5)
+        text_neg_dir = Text("Chiều âm (-)", font="Times New Roman", font_size=36, color=RED_C).move_to(axis_bottom.n2p(-2.5) + UP * 1.0)
+
+        # Nhịp 1: Xóa mượt ngoặc bằng cách trượt nhẹ ra ngoài
+        self.play(
+            FadeOut(brace_top, shift=DOWN*0.3), FadeOut(brace_text_top, shift=DOWN*0.3),
+            FadeOut(brace_bottom, shift=UP*0.3), FadeOut(brace_text_bottom, shift=UP*0.3),
+            run_time=0.8
+        )
+
+        # Nhịp 2: Hiển thị text trượt nhẹ vào vị trí
+        self.play(
+            FadeIn(text_pos_dir, shift=UP*0.3),
+            FadeIn(text_neg_dir, shift=DOWN*0.3),
+            run_time=1
+        )
+
         self.wait(2)
+
+        # -------------------------------------------------------------
+        # PHẦN 5 GIÂY CUỐI: XÓA CHỈ DẤU VÀ HIỆU ỨNG BẬP BÊNH TRỤC TỌA ĐỘ
+        # -------------------------------------------------------------
+        
+        # 1. Xóa hết các chỉ dấu vàng, x = +/- 5 m và chiều âm/dương
+        self.play(
+            FadeOut(arrow_down_top), FadeOut(text_green),
+            FadeOut(arrow_up_bottom), FadeOut(text_red),
+            FadeOut(text_pos_dir), FadeOut(text_neg_dir),
+            run_time=1
+        )
+
+        # Nhóm toàn bộ phần tử thuộc trục trên để dễ dàng xoay cùng lúc
+        top_group = VGroup(axis_top, x_label_top, dot_O_top, label_O_top, vec_green, dot_5_top)
+        
+        # Nhóm toàn bộ phần tử thuộc trục dưới
+        bottom_group = VGroup(axis_bottom, x_label_bottom, dot_O_bottom, label_O_bottom, vec_red, dot_minus_5_bottom)
+
+        # Lấy tọa độ điểm gốc O để làm tâm xoay
+        origin_top = axis_top.n2p(0)
+        origin_bottom = axis_bottom.n2p(0)
+
+        # 2. Bắt đầu hiệu ứng bập bênh (xoay lên 15 độ) -> mất 1.5s
+        self.play(
+            Rotate(top_group, angle=15 * DEGREES, about_point=origin_top),
+            Rotate(bottom_group, angle=15 * DEGREES, about_point=origin_bottom),
+            run_time=1.5,
+            rate_func=smooth
+        )
+
+        # 3. Xoay ngược xuống -30 độ (thành góc âm) -> mất 2.0s
+        self.play(
+            Rotate(top_group, angle=-30 * DEGREES, about_point=origin_top),
+            Rotate(bottom_group, angle=-30 * DEGREES, about_point=origin_bottom),
+            run_time=2.0,
+            rate_func=smooth
+        )
+
+        # 4. Xoay trở về vị trí cân bằng ngang -> mất 1.5s
+        self.play(
+            Rotate(top_group, angle=15 * DEGREES, about_point=origin_top),
+            Rotate(bottom_group, angle=15 * DEGREES, about_point=origin_bottom),
+            run_time=1.5,
+            rate_func=smooth
+        )
