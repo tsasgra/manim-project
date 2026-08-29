@@ -5,10 +5,10 @@ import random
 # Cấu hình tỷ lệ màn hình 9:16 (Video dọc)
 config.pixel_width = 1080
 config.pixel_height = 1920
-config.frame_width = 9.0   # Mở rộng chiều rộng khung hình logic để chứa vừa trục số dài
+config.frame_width = 9.0   # Sử dụng cấu hình 9.0 x 16.0 để hiển thị tốt nhất
 config.frame_height = 16.0 
 
-class CombinedPhysicsScene(Scene):
+class CombinedFullScene(Scene):
     def construct(self):
         # ==========================================
         # PHẦN 1: KHỞI TẠO CÁC ĐỐI TƯỢNG HOẠT ẢNH CHIA MÀN HÌNH
@@ -41,11 +41,11 @@ class CombinedPhysicsScene(Scene):
         # ==========================================
         # 2. NỬA TRÊN - BÓNG VÀ CHẤM TRÒN
         # ==========================================
-        ball = Circle(radius=0.6, color=RED, fill_opacity=1)
-        ball.set_stroke(color=WHITE, width=2)
+        ball_top = Circle(radius=0.6, color=RED, fill_opacity=1)
+        ball_top.set_stroke(color=WHITE, width=2)
         
         # Đặt quả bóng cố định ở chính giữa phần màn hình phía trên
-        ball.move_to(UP * 4.0)
+        ball_top.move_to(UP * 4.0)
 
         dots = VGroup()
         num_dots = 60 
@@ -72,7 +72,7 @@ class CombinedPhysicsScene(Scene):
         # ==========================================
         # PHẦN 2: CHẠY HOẠT ẢNH CHIA MÀN HÌNH (8 GIÂY)
         # ==========================================
-        self.add(solid_line, triangle_ramp, cube, dots, ball) 
+        self.add(solid_line, triangle_ramp, cube, dots, ball_top) 
         
         alpha_tracker = ValueTracker(0)
 
@@ -94,14 +94,12 @@ class CombinedPhysicsScene(Scene):
         cube.add_updater(update_cube)
         dots.add_updater(update_dots) 
 
-        # ---> ĐÃ SỬA: CHIA TIẾN TRÌNH THÀNH 3 GIAI ĐOẠN LIÊN TỤC KHÔNG KHỰNG
-        
         # 1. Chạy 4.5 giây đầu
         self.play(alpha_tracker.animate.set_value(4.5 / 8.0), run_time=4.5, rate_func=linear)
 
         # 2. Đổi giao diện trong 0.5 giây ĐỒNG THỜI tiếp tục chạy alpha_tracker 
         self.play(
-            alpha_tracker.animate.set_value(5.0 / 8.0), # Tiếp tục chạy thời gian
+            alpha_tracker.animate.set_value(5.0 / 8.0), 
             FadeOut(solid_line), 
             FadeIn(divider_group), 
             run_time=0.5, 
@@ -121,7 +119,7 @@ class CombinedPhysicsScene(Scene):
             FadeOut(triangle_ramp, shift=DOWN),
             FadeOut(cube, shift=DOWN),
             FadeOut(dots, shift=UP),
-            FadeOut(ball, shift=UP),
+            FadeOut(ball_top, shift=UP),
             FadeOut(divider_group, scale=0.5),
             run_time=1.2
         )
@@ -144,7 +142,6 @@ class CombinedPhysicsScene(Scene):
         # ==========================================
         # PHẦN 4: VẼ TRỤC TOẠ ĐỘ Ox
         # ==========================================
-        # Đưa "Trục Ox" lên cao (tọa độ Y = 6.5, gần sát mép trên)
         title = Text("Trục Ox", font="Arial").move_to(UP * 6.5)
         self.play(FadeIn(title, shift=DOWN))
 
@@ -157,18 +154,13 @@ class CombinedPhysicsScene(Scene):
         ox_axis.add_numbers()
         
         x_label = Tex("$x$ (m)").next_to(ox_axis.n2p(8), UP, buff=0.3)
-
         origin_dot = Dot(ox_axis.n2p(0), color="#00FFFF", radius=0.1)
         o_label = MathTex("O").next_to(origin_dot, DOWN, buff=0.3)
 
         self.play(Create(ox_axis), Write(x_label), run_time=1.5)
         self.play(FadeIn(origin_dot, scale=0.5), Write(o_label))
         
-        # -----------------------------------------------------
-        # Mũi tên chỉ lên và nội dung x = 0
-        # -----------------------------------------------------
         point_0 = ox_axis.n2p(0)
-        
         arrow_0 = Arrow(
             start=point_0 + UP * 0.2, 
             end=point_0 + UP * 1.0, 
@@ -179,15 +171,11 @@ class CombinedPhysicsScene(Scene):
 
         self.play(GrowArrow(arrow_0), FadeIn(label_0, shift=DOWN))
         self.wait(1.5)
-        
         self.play(FadeOut(arrow_0, shift=UP), FadeOut(label_0, shift=UP), run_time=0.5)
-        # -----------------------------------------------------
 
-        # Đặt dòng chữ ngay dưới tiêu đề "Trục Ox"
         infinite_label = Text("Kéo dài vô hạn về 2 phía", font="Arial", font_size=36, color=YELLOW).next_to(title, DOWN, buff=0.3)
         self.play(Write(infinite_label))
         self.wait(2)
-        
         self.play(FadeOut(infinite_label, shift=UP), run_time=0.5)
 
         pos_start = ox_axis.n2p(0.8) + DOWN * 1.5
@@ -202,7 +190,6 @@ class CombinedPhysicsScene(Scene):
 
         self.play(Create(pos_arrow), FadeIn(pos_text, shift=LEFT), run_time=1)
         self.wait(2)
-        
         self.play(Create(neg_arrow), FadeIn(neg_text, shift=RIGHT), run_time=1)
         self.wait(2.1)
 
@@ -224,7 +211,6 @@ class CombinedPhysicsScene(Scene):
 
         self.play(GrowArrow(arrow_5), FadeIn(label_5, shift=DOWN))
         self.wait(3)
-
         self.play(FadeOut(arrow_5, shift=UP), FadeOut(label_5, shift=UP), run_time=0.5)
 
         self.play(moving_group.animate.shift(RIGHT * 8), run_time=1.8)
@@ -308,9 +294,8 @@ class CombinedPhysicsScene(Scene):
         self.wait(0.5)
 
         # ==========================================
-        # PHẦN 6: TRỤC TỌA ĐỘ VÀ VECTOR VỊ TRÍ (ĐÃ CẬP NHẬT TỪ CODE 2)
+        # PHẦN 6: TRỤC TỌA ĐỘ VÀ VECTOR VỊ TRÍ 
         # ==========================================
-        # TRỤC TỌA ĐỘ TRÊN (TOP)
         axis_top = NumberLine(
             x_range=[0, 8.7, 1],
             length=8.5,
@@ -320,34 +305,21 @@ class CombinedPhysicsScene(Scene):
         axis_top.add_numbers()
         
         x_label_top = MathTex(r"x \text{ (m)}").next_to(axis_top, UP, aligned_edge=RIGHT).shift(LEFT * 0.2)
-        
         dot_O_top = Dot(axis_top.n2p(0), color=BLUE)
         label_O_top = MathTex("O").next_to(dot_O_top, DOWN)
         
         vec_green_start = axis_top.n2p(0)
         vec_green_end = axis_top.n2p(5)
         vec_green = Arrow(
-            start=vec_green_start, 
-            end=vec_green_end, 
-            color=GREEN_C, 
-            buff=0, 
-            stroke_width=6, 
-            max_tip_length_to_length_ratio=0.1
+            start=vec_green_start, end=vec_green_end, 
+            color=GREEN_C, buff=0, stroke_width=6, max_tip_length_to_length_ratio=0.1
         )
         
         dot_5_top = Dot(axis_top.n2p(5), color=BLUE)
-        
         point_5_top = axis_top.n2p(5)
-        arrow_down_top = Arrow(
-            start=point_5_top + UP * 1.0, 
-            end=point_5_top + UP * 0.2, 
-            color=YELLOW, 
-            buff=0
-        )
-        
+        arrow_down_top = Arrow(start=point_5_top + UP * 1.0, end=point_5_top + UP * 0.2, color=YELLOW, buff=0)
         text_green = MathTex(r"x = +5 \text{ m}", color=GREEN_C).next_to(arrow_down_top, UP)
 
-        # TRỤC TỌA ĐỘ DƯỚI (BOTTOM)
         axis_bottom = NumberLine(
             x_range=[-8.7, 0, 1],
             length=8.5,
@@ -357,35 +329,22 @@ class CombinedPhysicsScene(Scene):
         axis_bottom.add_numbers()
 
         x_label_bottom = MathTex(r"x \text{ (m)}").next_to(axis_bottom, UP, aligned_edge=LEFT).shift(RIGHT * 0.2)
-
         dot_O_bottom = Dot(axis_bottom.n2p(0), color=BLUE)
         label_O_bottom = MathTex("O").next_to(dot_O_bottom, DOWN)
 
         vec_red_start = axis_bottom.n2p(0)
         vec_red_end = axis_bottom.n2p(-5)
         vec_red = Arrow(
-            start=vec_red_start, 
-            end=vec_red_end, 
-            color=RED_C, 
-            buff=0, 
-            stroke_width=6, 
-            max_tip_length_to_length_ratio=0.1
+            start=vec_red_start, end=vec_red_end, 
+            color=RED_C, buff=0, stroke_width=6, max_tip_length_to_length_ratio=0.1
         )
 
         dot_minus_5_bottom = Dot(axis_bottom.n2p(-5), color=BLUE)
-
         point_minus_5_bottom = axis_bottom.n2p(-5)
         
-        arrow_up_bottom = Arrow(
-            start=point_minus_5_bottom + DOWN * 1.5, 
-            end=point_minus_5_bottom + DOWN * 0.5, 
-            color=YELLOW, 
-            buff=0
-        )
-        
+        arrow_up_bottom = Arrow(start=point_minus_5_bottom + DOWN * 1.5, end=point_minus_5_bottom + DOWN * 0.5, color=YELLOW, buff=0)
         text_red = MathTex(r"x = -5 \text{ m}", color=RED_C).next_to(arrow_up_bottom, DOWN)
 
-        # KỊCH BẢN CHẠY ANIMATION
         self.play(
             Create(axis_top), FadeIn(x_label_top), FadeIn(dot_O_top), FadeIn(label_O_top),
             Create(axis_bottom), FadeIn(x_label_bottom), FadeIn(dot_O_bottom), FadeIn(label_O_bottom),
@@ -393,26 +352,17 @@ class CombinedPhysicsScene(Scene):
         )
         self.wait(0.5)
 
-        self.play(
-            GrowArrow(vec_green),
-            GrowArrow(vec_red),
-            run_time=2
-        )
-        
+        self.play(GrowArrow(vec_green), GrowArrow(vec_red), run_time=2)
         self.add(dot_5_top, dot_minus_5_bottom)
-
         self.wait(0.7)
 
-        # Mũi tên vàng và text xuất hiện
         self.play(
             GrowArrow(arrow_down_top), FadeIn(text_green),
             GrowArrow(arrow_up_bottom), FadeIn(text_red),
             run_time=1.5
         )
-        
         self.wait(1)
 
-        # THÊM PHẦN BIỂU THỊ ĐỘ LỚN |x| = 5 m
         brace_top = BraceBetweenPoints(axis_top.n2p(0), axis_top.n2p(5), direction=DOWN).shift(DOWN * 0.8)
         brace_text_top = MathTex(r"|x| = 5 \text{ m}").next_to(brace_top, DOWN)
 
@@ -424,34 +374,19 @@ class CombinedPhysicsScene(Scene):
             GrowFromCenter(brace_bottom), FadeIn(brace_text_bottom),
             run_time=1.5
         )
-
         self.wait(1.5)
 
-        # XÓA NGOẶC VÀ THÊM TEXT (ĐIỀU CHỈNH VỊ TRÍ)
         text_pos_dir = Text("Chiều dương (+)", font="Times New Roman", font_size=36, color=GREEN_C).move_to(axis_top.n2p(2.5) + DOWN * 1.5)
         text_neg_dir = Text("Chiều âm (-)", font="Times New Roman", font_size=36, color=RED_C).move_to(axis_bottom.n2p(-2.5) + UP * 1.0)
 
-        # Nhịp 1: Xóa mượt ngoặc bằng cách trượt nhẹ ra ngoài
         self.play(
             FadeOut(brace_top, shift=DOWN*0.3), FadeOut(brace_text_top, shift=DOWN*0.3),
             FadeOut(brace_bottom, shift=UP*0.3), FadeOut(brace_text_bottom, shift=UP*0.3),
             run_time=0.8
         )
-
-        # Nhịp 2: Hiển thị text trượt nhẹ vào vị trí
-        self.play(
-            FadeIn(text_pos_dir, shift=UP*0.3),
-            FadeIn(text_neg_dir, shift=DOWN*0.3),
-            run_time=1
-        )
-
+        self.play(FadeIn(text_pos_dir, shift=UP*0.3), FadeIn(text_neg_dir, shift=DOWN*0.3), run_time=1)
         self.wait(2)
 
-        # -------------------------------------------------------------
-        # PHẦN 5 GIÂY CUỐI: XÓA CHỈ DẤU VÀ HIỆU ỨNG BẬP BÊNH TRỤC TỌA ĐỘ
-        # -------------------------------------------------------------
-        
-        # 1. Xóa hết các chỉ dấu vàng, x = +/- 5 m và chiều âm/dương
         self.play(
             FadeOut(arrow_down_top), FadeOut(text_green),
             FadeOut(arrow_up_bottom), FadeOut(text_red),
@@ -459,36 +394,131 @@ class CombinedPhysicsScene(Scene):
             run_time=1
         )
 
-        # Nhóm toàn bộ phần tử thuộc trục trên để dễ dàng xoay cùng lúc
         top_group = VGroup(axis_top, x_label_top, dot_O_top, label_O_top, vec_green, dot_5_top)
-        
-        # Nhóm toàn bộ phần tử thuộc trục dưới
         bottom_group = VGroup(axis_bottom, x_label_bottom, dot_O_bottom, label_O_bottom, vec_red, dot_minus_5_bottom)
 
-        # Lấy tọa độ điểm gốc O để làm tâm xoay
         origin_top = axis_top.n2p(0)
         origin_bottom = axis_bottom.n2p(0)
 
-        # 2. Bắt đầu hiệu ứng bập bênh (xoay lên 15 độ) -> mất 1.5s
         self.play(
             Rotate(top_group, angle=15 * DEGREES, about_point=origin_top),
             Rotate(bottom_group, angle=15 * DEGREES, about_point=origin_bottom),
-            run_time=1.5,
-            rate_func=smooth
+            run_time=1.5, rate_func=smooth
         )
 
-        # 3. Xoay ngược xuống -30 độ (thành góc âm) -> mất 2.0s
         self.play(
             Rotate(top_group, angle=-30 * DEGREES, about_point=origin_top),
             Rotate(bottom_group, angle=-30 * DEGREES, about_point=origin_bottom),
-            run_time=2.0,
-            rate_func=smooth
+            run_time=2.0, rate_func=smooth
         )
 
-        # 4. Xoay trở về vị trí cân bằng ngang -> mất 1.5s
         self.play(
             Rotate(top_group, angle=15 * DEGREES, about_point=origin_top),
             Rotate(bottom_group, angle=15 * DEGREES, about_point=origin_bottom),
-            run_time=1.5,
-            rate_func=smooth
+            run_time=1.5, rate_func=smooth
         )
+
+        # XÓA MÀN HÌNH ĐỂ CHUYỂN QUA CODE THỨ 2
+        self.wait(0.5)
+        self.play(
+            FadeOut(top_group),
+            FadeOut(bottom_group),
+            run_time=1.5
+        )
+
+        # ==========================================
+        # PHẦN 7 (TỪ CODE 2): QUẢ BÓNG RƠI XUỐNG
+        # ==========================================
+        step_size_1 = 0.8 
+        origin_pos_1 = UP * 5  
+        axis_length_1 = 10 * step_size_1 + 0.8
+        axis_end_1 = origin_pos_1 + DOWN * axis_length_1
+
+        axis_line_1 = Arrow(
+            start=origin_pos_1, end=axis_end_1, buff=0, 
+            color=LIGHT_GREY, stroke_width=2, max_tip_length_to_length_ratio=0.035
+        )
+        axis_label_1 = MathTex(r"x \text{ (m)}", font_size=36).next_to(axis_line_1, DOWN)
+        origin_label_1 = MathTex("O", font_size=40).next_to(origin_pos_1, LEFT, buff=0.3)
+        origin_dot_1 = Dot(radius=0.08, color="#50C878").move_to(origin_pos_1)
+
+        ticks_1 = VGroup()
+        labels_1 = VGroup()
+        for i in range(1, 11):
+            tick_pos = origin_pos_1 + DOWN * i * step_size_1
+            tick = Line(LEFT * 0.1, RIGHT * 0.1, stroke_width=2, color=LIGHT_GREY).move_to(tick_pos)
+            label = Tex(str(i), font_size=36).next_to(tick, LEFT, buff=0.3)
+            ticks_1.add(tick)
+            labels_1.add(label)
+
+        axis_group_1 = VGroup(axis_line_1, axis_label_1, origin_label_1, origin_dot_1, ticks_1, labels_1)
+
+        ball_radius = 0.35
+        ball = Circle(radius=ball_radius, color="#FF6F59", fill_opacity=1) 
+        ball.move_to(origin_pos_1 + RIGHT * (ball_radius + 0.1))
+
+        self.play(FadeIn(axis_group_1), FadeIn(ball))
+        self.wait(0.5)
+
+        fall_distance = 10 * step_size_1
+        final_pos_1 = ball.get_center() + DOWN * fall_distance
+        
+        self.play(
+            ball.animate.move_to(final_pos_1),
+            run_time=2.5,
+            rate_func=rate_functions.ease_in_quad 
+        )
+        self.wait(1)
+
+        self.play(FadeOut(axis_group_1))
+
+        # ==========================================
+        # PHẦN 8 (TỪ CODE 2): QUẢ BÓNG ĐI CHÉO LÊN
+        # ==========================================
+        step_size_2 = 0.8
+        origin_pos_2 = DOWN * 4 + LEFT * 2.5  
+        
+        axis_dir = normalize(UP + RIGHT) 
+        axis_length_2 = 8 * step_size_2 + 0.8
+        axis_end_2 = origin_pos_2 + axis_dir * axis_length_2
+
+        axis_line_2 = Arrow(
+            start=origin_pos_2, end=axis_end_2, buff=0, 
+            color=LIGHT_GREY, stroke_width=2, max_tip_length_to_length_ratio=0.035
+        )
+        axis_label_2 = MathTex(r"x \text{ (m)}", font_size=36).next_to(axis_line_2.get_end(), RIGHT)
+        origin_label_2 = MathTex("O", font_size=40).next_to(origin_pos_2, DOWN + LEFT, buff=0.2)
+        origin_dot_2 = Dot(radius=0.08, color="#50C878").move_to(origin_pos_2)
+
+        ticks_2 = VGroup()
+        labels_2 = VGroup()
+        tick_dir = normalize(UP + LEFT) 
+
+        for i in range(1, 8):
+            tick_pos = origin_pos_2 + axis_dir * i * step_size_2
+            tick = Line(tick_dir * 0.1, -tick_dir * 0.1, stroke_width=2, color=LIGHT_GREY).move_to(tick_pos)
+            label = Tex(str(i), font_size=36).next_to(tick_pos, DOWN + RIGHT, buff=0.15)
+            ticks_2.add(tick)
+            labels_2.add(label)
+
+        axis_group_2 = VGroup(axis_line_2, axis_label_2, origin_label_2, origin_dot_2, ticks_2, labels_2)
+
+        ball_offset = tick_dir * ball_radius
+        start_pos_2 = origin_pos_2 + ball_offset
+        
+        self.play(
+            FadeIn(axis_group_2),
+            ball.animate.move_to(start_pos_2),
+            run_time=1.5
+        )
+        self.wait(0.5)
+
+        climb_distance = 7 * step_size_2
+        final_pos_2 = ball.get_center() + axis_dir * climb_distance
+        
+        self.play(
+            ball.animate.move_to(final_pos_2),
+            run_time=5, 
+            rate_func=rate_functions.smooth 
+        )
+        self.wait(1)
