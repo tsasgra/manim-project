@@ -5,7 +5,7 @@ import random
 # Cấu hình tỷ lệ màn hình 9:16 (Video dọc)
 config.pixel_width = 1080
 config.pixel_height = 1920
-config.frame_width = 10.0   # Mở rộng chiều rộng khung hình logic để chứa vừa trục số dài
+config.frame_width = 9.0   # Mở rộng chiều rộng khung hình logic để chứa vừa trục số dài
 config.frame_height = 16.0 
 
 class CombinedPhysicsScene(Scene):
@@ -140,11 +140,11 @@ class CombinedPhysicsScene(Scene):
         self.wait(1.5)
         self.play(FadeOut(ending_text, scale=1.2), run_time=1.0)
         self.wait(0.5)
-
         # ==========================================
         # PHẦN 4: VẼ TRỤC TOẠ ĐỘ Ox
         # ==========================================
-        title = Text("Trục Ox", font="Arial").to_edge(UP)
+        # Đưa "Trục Ox" lên cao (tọa độ Y = 6.5, gần sát mép trên)
+        title = Text("Trục Ox", font="Arial").move_to(UP * 6.5)
         self.play(FadeIn(title, shift=DOWN))
 
         ox_axis = NumberLine(
@@ -163,7 +163,27 @@ class CombinedPhysicsScene(Scene):
         self.play(Create(ox_axis), Write(x_label), run_time=1.5)
         self.play(FadeIn(origin_dot, scale=0.5), Write(o_label))
         
-        infinite_label = Text("Kéo dài vô hạn về 2 phía", font="Arial", font_size=36, color=YELLOW).next_to(title, DOWN)
+        # -----------------------------------------------------
+        # Mũi tên chỉ lên và nội dung x = 0
+        # -----------------------------------------------------
+        point_0 = ox_axis.n2p(0)
+        
+        arrow_0 = Arrow(
+            start=point_0 + UP * 0.2, 
+            end=point_0 + UP * 1.0, 
+            color=YELLOW,
+            buff=0
+        )
+        label_0 = MathTex("x = 0", color=YELLOW).next_to(arrow_0, UP, buff=0.2)
+
+        self.play(GrowArrow(arrow_0), FadeIn(label_0, shift=DOWN))
+        self.wait(1.5)
+        
+        self.play(FadeOut(arrow_0, shift=UP), FadeOut(label_0, shift=UP), run_time=0.5)
+        # -----------------------------------------------------
+
+        # Đặt dòng chữ ngay dưới tiêu đề "Trục Ox"
+        infinite_label = Text("Kéo dài vô hạn về 2 phía", font="Arial", font_size=36, color=YELLOW).next_to(title, DOWN, buff=0.3)
         self.play(Write(infinite_label))
         self.wait(2)
         
@@ -228,7 +248,6 @@ class CombinedPhysicsScene(Scene):
             run_time=1.2
         )
         self.wait(0.3)
-
         # ==========================================
         # PHẦN 5: HIỆU ỨNG CHUYỂN CẢNH "Vị trí (Vector)"
         # ==========================================
