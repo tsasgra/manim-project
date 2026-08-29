@@ -5,7 +5,7 @@ import random
 # Cấu hình tỷ lệ màn hình 9:16 (Video dọc)
 config.pixel_width = 1080
 config.pixel_height = 1920
-config.frame_width = 9.0   # Sử dụng cấu hình 9.0 x 16.0 để hiển thị tốt nhất
+config.frame_width = 9.0   
 config.frame_height = 16.0 
 
 class CombinedFullScene(Scene):
@@ -418,7 +418,7 @@ class CombinedFullScene(Scene):
             run_time=1.5, rate_func=smooth
         )
 
-        # XÓA MÀN HÌNH ĐỂ CHUYỂN QUA CODE THỨ 2
+        # XÓA MÀN HÌNH ĐỂ CHUYỂN QUA TRỤC TỌA ĐỘ ĐƠN DỌC
         self.wait(0.5)
         self.play(
             FadeOut(top_group),
@@ -427,7 +427,7 @@ class CombinedFullScene(Scene):
         )
 
         # ==========================================
-        # PHẦN 7 (TỪ CODE 2): QUẢ BÓNG RƠI XUỐNG
+        # PHẦN 7: QUẢ BÓNG RƠI XUỐNG
         # ==========================================
         step_size_1 = 0.8 
         origin_pos_1 = UP * 5  
@@ -473,7 +473,7 @@ class CombinedFullScene(Scene):
         self.play(FadeOut(axis_group_1))
 
         # ==========================================
-        # PHẦN 8 (TỪ CODE 2): QUẢ BÓNG ĐI CHÉO LÊN
+        # PHẦN 8: QUẢ BÓNG ĐI CHÉO LÊN
         # ==========================================
         step_size_2 = 0.8
         origin_pos_2 = DOWN * 4 + LEFT * 2.5  
@@ -522,3 +522,64 @@ class CombinedFullScene(Scene):
             rate_func=rate_functions.smooth 
         )
         self.wait(1)
+
+        # Xóa các đối tượng của phần 8 chuẩn bị chuyển cảnh
+        self.play(FadeOut(axis_group_2), FadeOut(ball), run_time=1)
+        self.wait(0.5)
+
+        # ==========================================
+        # PHẦN 9 (TỪ CODE 2): MẶT PHẲNG NGHIÊNG
+        # ==========================================
+        main_text_inc = Text(
+            "Vị trí – Vận tốc – Gia tốc", 
+            font="Arial", 
+            font_size=40,  # Đã tăng size để phù hợp với màn hình dọc của code 1
+            color=YELLOW
+        ).to_edge(UP, buff=1.5)
+        
+        self.play(Write(main_text_inc))
+
+        plane_inc = Line(LEFT * 3.5, RIGHT * 3.5, color=WHITE).shift(DOWN * 1)
+        
+        # Quả bóng
+        ball_radius_inc = 0.25 # Đã tăng nhẹ kích thước
+        ball_inc = Circle(radius=ball_radius_inc, color=RED, fill_opacity=1)
+        start_pos_inc = plane_inc.point_from_proportion(0.15) + UP * ball_radius_inc
+        ball_inc.move_to(start_pos_inc)
+
+        # Tấm ván gỗ
+        board_inc = Rectangle(width=0.1, height=0.5, color="#8B4513", fill_opacity=1) 
+        board_inc.next_to(ball_inc, RIGHT, buff=0)
+        board_inc.shift(DOWN * (board_inc.get_bottom()[1] - plane_inc.get_center()[1]))
+
+        # Hiện mặt phẳng, quả bóng và tấm ván
+        self.play(Create(plane_inc), FadeIn(ball_inc), FadeIn(board_inc))
+        self.wait(1)
+
+        # Nâng đầu bên trái lên
+        tilt_angle = -30 * DEGREES 
+        rotating_group_inc = VGroup(plane_inc, ball_inc, board_inc)
+        
+        # Lấy điểm ngoài cùng bên phải làm tâm xoay
+        pivot_point_inc = plane_inc.get_right()
+        
+        self.play(
+            rotating_group_inc.animate.rotate(tilt_angle, about_point=pivot_point_inc),
+            run_time=2.5
+        )
+        self.wait(0.5)
+
+        # Rút tấm ván vào trong (Vuông góc)
+        norm_vec_inc = np.array([-np.sin(tilt_angle), np.cos(tilt_angle), 0])
+        self.play(FadeOut(board_inc, shift=norm_vec_inc * 0.5), run_time=0.5)
+        self.wait(0.2)
+
+        # Bóng lăn xuống
+        end_pos_inc = plane_inc.point_from_proportion(0.9) + norm_vec_inc * ball_radius_inc
+        
+        self.play(
+            ball_inc.animate.move_to(end_pos_inc),
+            run_time=2.5,
+            rate_func=rate_functions.ease_in_quad 
+        )
+        self.wait(2)
